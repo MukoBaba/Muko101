@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Yaz Boz</title>
+<title>KOBİ</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Yaz Boz">
@@ -97,18 +97,43 @@
 /* Çok küçük ekranlar (320px altı) */
 @media (max-width: 340px) {
   :root { --col0: 44px; }
-  .score-cell input { font-size: 13px; }
+  .score-cell input { font-size: 18px; }
   .del-btn { font-size: 0.7rem; padding: 1px 2px; }
   .pname-dot { width: 7px; height: 7px; }
 }
 
-  from { opacity:0; transform:scale(0.7); }
-  to   { opacity:1; transform:scale(1); }
+@keyframes winnerPop {
+  0%   { opacity:0; transform:scale(0.5) translateY(40px); }
+  70%  { opacity:1; transform:scale(1.04) translateY(-4px); }
+  100% { opacity:1; transform:scale(1) translateY(0); }
 }
 @keyframes bounce2 {
-  from { transform:translateY(0) rotate(-5deg); }
-  to   { transform:translateY(-10px) rotate(5deg); }
+  from { transform:translateY(0) rotate(-8deg) scale(1); }
+  to   { transform:translateY(-16px) rotate(8deg) scale(1.1); }
 }
+@keyframes nameGlow {
+  0%,100% { text-shadow: 0 0 20px rgba(255,215,0,0.4), 0 0 40px rgba(255,215,0,0.2); }
+  50%     { text-shadow: 0 0 50px rgba(255,215,0,1), 0 0 100px rgba(255,215,0,0.6), 0 0 140px rgba(255,140,0,0.4); }
+}
+@keyframes slideUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes sloganPulse {
+  0%,100% { box-shadow:0 0 0 rgba(255,215,0,0); }
+  50%     { box-shadow:0 0 24px rgba(255,215,0,0.3); }
+}
+@keyframes crownDrop {
+  0%   { opacity:0; transform:translateY(-80px) rotate(-15deg) scale(0.4); }
+  60%  { opacity:1; transform:translateY(8px) rotate(4deg) scale(1.2); }
+  80%  { transform:translateY(-4px) rotate(-2deg) scale(0.96); }
+  100% { opacity:1; transform:translateY(0) rotate(0deg) scale(1); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
 
 body {
   background: #12022e;
@@ -375,7 +400,7 @@ body.team-mode .team-tag { display: block; }
 .score-cell input {
   width: 100%; height: 100%; min-height: 54px;
   background: transparent; border: none; outline: none;
-  color: #fff; font-size: 20px; font-weight: 800;
+  color: #fff; font-size: 26px; font-weight: 800;
   text-align: center; position: relative; z-index: 1;
   -moz-appearance: textfield;
 }
@@ -393,6 +418,7 @@ body.team-mode .team-tag { display: block; }
   grid-template-columns: 72px repeat(4, 1fr);
   background: rgba(45,27,94,0.75);
   border-top: 2px solid #ffd700;
+  margin-top: 0;
 }
 .total-label {
   padding: 12px 8px;
@@ -914,17 +940,18 @@ body.team-mode .team-score-section { display: flex; }
 </div>
 
 <!-- Oyun Başlat Overlay -->
-<div id="oyun-overlay" style="position:relative;margin:0 12px 0;border-radius:20px;overflow:hidden;display:block;">
+<div id="oyun-overlay" style="position:relative;margin:0 0 20px 0;border-radius:0;overflow:hidden;display:block;border-left:none;border-right:none;border-top:none;border-bottom:none;">
   <div id="oyun-overlay-btn" style="
     position:absolute;inset:0;z-index:10;
-    background:rgba(10,0,30,0.82);
+    background:rgba(10,0,30,0.92);
     backdrop-filter:blur(5px);
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
-    border-radius:20px;
-    border:1px solid rgba(255,215,0,0.2);
+    border-radius:0;
     min-height:260px;
     padding:20px 16px;
   ">
+    <!-- İç kart — oval köşeli -->
+    <div style="width:100%;max-width:440px;background:rgba(255,255,255,0.03);border:1.5px solid rgba(255,215,0,0.25);border-radius:20px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:16px;box-shadow:0 0 24px rgba(168,85,247,0.12);">
     <!-- 2x2 isim grid -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:400px;">
       <div style="position:relative;">
@@ -944,6 +971,11 @@ body.team-mode .team-score-section { display: flex; }
         <input id="ov-n3" type="text" maxlength="12" placeholder="Oyuncu 4" style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;color:#fff;font-family:inherit;font-size:15px;font-weight:600;padding:13px 12px 13px 28px;outline:none;">
       </div>
     </div>
+    <!-- Takımlı / Takımsız toggle -->
+    <div style="display:flex;gap:8px;width:100%;max-width:400px;">
+      <button id="ov-takim-btn" onclick="ovTakimSec(false)" style="flex:1;background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.3);border-radius:12px;color:rgba(255,255,255,0.8);font-family:inherit;font-size:14px;font-weight:700;padding:11px 8px;cursor:pointer;transition:all 0.2s;">👤 Takımsız</button>
+      <button id="ov-takimli-btn" onclick="ovTakimSec(true)" style="flex:1;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.12);border-radius:12px;color:rgba(255,255,255,0.4);font-family:inherit;font-size:14px;font-weight:700;padding:11px 8px;cursor:pointer;transition:all 0.2s;">👥 Takımlı</button>
+    </div>
     <!-- Başlat butonu -->
     <button onclick="oyunuBaslat()" style="
       width:100%;max-width:400px;
@@ -954,15 +986,15 @@ body.team-mode .team-score-section { display: flex; }
       box-shadow:0 8px 36px rgba(255,215,0,0.45);
       letter-spacing:0.03em;
     ">▶ OYUNU BAŞLAT</button>
+    </div><!-- /iç kart -->
   </div>
   <!-- Oyuncu isimleri (overlay altında gizli kalır) -->
-  <div class="player-names" id="player-names"></div>
-  <div class="rounds-wrap" id="rounds-wrap" style="min-height:200px;"></div>
-</div>
-
-<!-- Total row -->
-<div class="total-row" id="total-row" style="display:none;">
-  <div class="total-label">Toplam</div>
+  <div class="player-names" id="player-names" style="margin:0;border-radius:0;"></div>
+  <div class="rounds-wrap" id="rounds-wrap" style="min-height:240px;margin:0;border-radius:0;"></div>
+  <!-- Total row — rounds-wrap ile bitişik -->
+  <div class="total-row" id="total-row" style="display:none;">
+    <div class="total-label">Toplam</div>
+  </div>
 </div>
 
 <!-- Add round -->
@@ -978,6 +1010,20 @@ body.team-mode .team-score-section { display: flex; }
     padding:14px 20px;cursor:pointer;
     transition:all 0.2s;
   ">🏁 Oyunu Bitir</button>
+</div>
+
+<!-- Kilit + Takım butonları — takım skoru üstü -->
+<div style="display:flex;gap:10px;padding:14px 16px 4px;">
+  <button id="alt-lock-btn2" onclick="toggleLock()" style="
+    flex:1;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.2);
+    border-radius:14px;color:#fff;font-family:inherit;font-size:15px;font-weight:700;
+    padding:14px 8px;cursor:pointer;transition:all 0.2s;
+  ">🔒 Kilitli</button>
+  <button id="alt-team-btn2" onclick="toggleTeam()" style="
+    flex:1;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.2);
+    border-radius:14px;color:#fff;font-family:inherit;font-size:15px;font-weight:700;
+    padding:14px 8px;cursor:pointer;transition:all 0.2s;
+  ">👤 Takımsız</button>
 </div>
 
 <!-- Takım skorları -->
@@ -997,6 +1043,7 @@ body.team-mode .team-score-section { display: flex; }
 </div>
 
 <!-- Leaderboard -->
+
 <div class="lb-section">
   <div class="lb-header">
     <span>Sıralama</span>
@@ -1090,10 +1137,8 @@ body.team-mode .team-score-section { display: flex; }
   <div class="saves-list" id="saves-list"></div>
 </div>
 
-<!-- Reset -->
-<div class="reset-wrap" style="padding-bottom:10px;">
-  <button class="share-btn" id="share-btn">📤 Sonucu Paylaş</button>
-</div>
+<!-- Gizli paylaş tetikleyici (winner modal için) -->
+<button id="share-btn" style="display:none;">📤</button>
 <!-- Reset -->
 <div class="reset-wrap">
   <button class="reset-btn" id="reset-btn">↺ Puanları Sıfırla</button>
@@ -1252,47 +1297,61 @@ function buildHeader() {
   var corner = document.createElement('div');
   corner.className = 'corner';
   corner.style.cssText = 'display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;';
+  var ekranKilitli = window._ekranKilitli || false;
   corner.innerHTML =
-    '<button class="lock-btn ' + (isLocked ? 'locked' : 'unlocked') + '" id="lock-btn-top" style="position:static;transform:none;margin:0;">' +
-      '<span class="lock-icon">' + (isLocked ? '🔒' : '✏️') + '</span>' +
-      '<span class="lock-label">' + (isLocked ? 'Kilitli' : 'Düzenle') + '</span>' +
-    '</button>' +
-    '<button class="team-btn' + (isTeam ? ' on' : '') + '" id="team-btn" style="position:static;transform:none;margin:0;">' +
-      '<span class="team-icon">' + (isTeam ? '🔴🔵' : '👥') + '</span>' +
-      '<span class="team-label">' + (isTeam ? 'Takımlı' : 'Takımsız') + '</span>' +
+    '<button id="ekran-kilit-btn" style="' +
+      'position:static;transform:none;margin:0;' +
+      'background:' + (ekranKilitli ? 'rgba(233,69,96,0.2)' : 'rgba(255,255,255,0.07)') + ';' +
+      'border:1.5px solid ' + (ekranKilitli ? 'rgba(233,69,96,0.7)' : 'rgba(255,255,255,0.2)') + ';' +
+      'border-radius:10px;cursor:pointer;padding:6px 4px;width:100%;text-align:center;' +
+    '">' +
+      '<span style="font-size:1rem;display:block;line-height:1;">' + (ekranKilitli ? '🔒' : '🔓') + '</span>' +
+      '<span style="font-size:0.38rem;letter-spacing:0.06em;color:' + (ekranKilitli ? '#ff6b8a' : '#9a8abb') + ';text-transform:uppercase;display:block;margin-top:2px;">' + (ekranKilitli ? 'Kilitli' : 'Kilitsiz') + '</span>' +
     '</button>';
   wrap.appendChild(corner);
 
-  // Kilit event
-  document.getElementById('lock-btn-top').addEventListener('click', function(){
-    isLocked = !isLocked;
-    if (isLocked) {
-      document.body.classList.add('locked');
-      this.className = 'lock-btn locked'; this.style.cssText = 'position:static;transform:none;margin:0;';
-      this.querySelector('.lock-icon').textContent = '🔒';
-      this.querySelector('.lock-label').textContent = 'Kilitli';
+  // Ekran kilidi event — tıklama engel overlay
+  document.getElementById('ekran-kilit-btn').addEventListener('click', function(e){
+    e.stopPropagation();
+    window._ekranKilitli = !window._ekranKilitli;
+    var overlay = document.getElementById('ekran-kilit-overlay');
+    if (window._ekranKilitli) {
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'ekran-kilit-overlay';
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:transparent;touch-action:none;';
+        // Çift tıkla kaldır
+        overlay.addEventListener('dblclick', function(ev){
+          ev.stopPropagation();
+          window._ekranKilitli = false;
+          overlay.remove();
+          buildHeader();
+        });
+        overlay.addEventListener('click', function(ev){ ev.stopPropagation(); });
+        overlay.addEventListener('touchstart', function(ev){ ev.stopPropagation(); }, {passive:false});
+        document.body.appendChild(overlay);
+      }
+      buildHeader();
     } else {
-      document.body.classList.remove('locked');
-      this.className = 'lock-btn unlocked'; this.style.cssText = 'position:static;transform:none;margin:0;';
-      this.querySelector('.lock-icon').textContent = '✏️';
-      this.querySelector('.lock-label').textContent = 'Düzenle';
+      if (overlay) overlay.remove();
+      buildHeader();
     }
   });
-  // Takım event
-  document.getElementById('team-btn').addEventListener('click', function(){
-    isTeam = !isTeam;
-    if (isTeam) {
-      document.body.classList.add('team-mode');
-      this.className = 'team-btn on'; this.style.cssText = 'position:static;transform:none;margin:0;';
-      this.querySelector('.team-icon').textContent = '🔴🔵';
-      this.querySelector('.team-label').textContent = 'Takımlı';
-    } else {
-      document.body.classList.remove('team-mode');
-      this.className = 'team-btn'; this.style.cssText = 'position:static;transform:none;margin:0;';
-      this.querySelector('.team-icon').textContent = '👥';
-      this.querySelector('.team-label').textContent = 'Takımsız';
-    }
-  });
+
+  // Gizli lock-btn-top (altTeamSync için)
+  if (!document.getElementById('lock-btn-top')) {
+    var ghost = document.createElement('button');
+    ghost.id = 'lock-btn-top';
+    ghost.style.display = 'none';
+    document.body.appendChild(ghost);
+  }
+  // Gizli team-btn
+  if (!document.getElementById('team-btn')) {
+    var ghostT = document.createElement('button');
+    ghostT.id = 'team-btn';
+    ghostT.style.display = 'none';
+    document.body.appendChild(ghostT);
+  }
   for (var pi = 0; pi < 4; pi++) {
     (function(pi){
       var cell = document.createElement('div');
@@ -1628,23 +1687,24 @@ document.getElementById('save-go-btn').addEventListener('click', function(){
 
 /* ── Reset ── */
 document.getElementById('reset-btn').addEventListener('click', function(){
-  if (!confirm('Tüm puanlar silinsin mi?\nİsimler ve turlar korunur.')) return;
-  state.scores = [];
+  if (!confirm('Puanlar ve turlar sıfırlansın mı?\nİsimler korunur.')) return;
+  doReset();
+});
+
+function doReset() {
+  state.scores = [['','','',''],['','','',''],['','','',''],['','','','']];
   buildRows(); refreshTotals(); renderLb();
-  // Overlay'i geri göster
-  oyunBasladi = false;
-  var ov = document.getElementById('oyun-overlay-btn');
-  if (ov) { ov.style.opacity='1'; ov.style.display = 'flex'; }
+  var rw = document.getElementById('rounds-wrap');
+  if (rw) rw.style.minHeight = '0';
   var tr = document.getElementById('total-row');
   var aw = document.getElementById('add-wrap');
-  if (tr) tr.style.display = 'none';
-  if (aw) aw.style.display = 'none';
-  // İsimleri overlay inputlara geri yaz
-  [0,1,2,3].forEach(function(i){
-    var inp = document.getElementById('ov-n'+i);
-    if (inp) inp.value = state.names[i] && state.names[i] !== ('Oyuncu '+(i+1)) ? state.names[i] : '';
-  });
-});
+  if (tr) tr.style.display = '';
+  if (aw) aw.style.display = 'flex';
+  setTimeout(function(){
+    var inp = document.querySelector('.score-inp');
+    if (inp) inp.focus();
+  }, 200);
+}
 
 /* ── Takım ve kilit buildHeader içinde ── */
 
@@ -1674,44 +1734,100 @@ function oyunuBitir() {
   var totals = [0,1,2,3].map(function(p) {
     return state.scores.reduce(function(s,r){ return s+(parseInt(r[p])||0); },0);
   });
-  var sirali = [0,1,2,3].map(function(i){
-    return {isim: pname(i), total: totals[i], color: ['#ff3f5b','#ff8c00','#00e5ff','#00ff94'][i]};
-  }).sort(function(a,b){ return a.total-b.total; });
-
-  var kazanan = sirali[0];
   var sloganlar = ['Taht sarsılmaz! 👑','Babalarla zor yarışılır 😎','Rakip ne rakip! 😏','Sayılar yalan söylemez! 📊','Ez geçilmez bu! 💪','Ustalar ustalığını gösterdi! 🔥'];
   var slo = sloganlar[Math.floor(Math.random()*sloganlar.length)];
-  var medals = ['🥇','🥈','🥉','4.'];
 
-  // Modal oluştur
   var overlay = document.createElement('div');
   overlay.id = 'winner-modal';
-  overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(5,0,20,0.92);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#07001a;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;overflow:hidden;overflow-y:auto;';
+  overlay.innerHTML = '<div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 30%,rgba(255,215,0,0.13) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 20% 80%,rgba(168,85,247,0.1) 0%,transparent 60%);pointer-events:none;"></div>';
 
   var box = document.createElement('div');
-  box.style.cssText = 'background:linear-gradient(160deg,#1e0845,#0d0120);border:1px solid rgba(255,215,0,0.25);border-radius:24px;padding:32px 24px;max-width:380px;width:100%;text-align:center;animation:winnerPop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;';
+  box.style.cssText = 'position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%;max-width:400px;text-align:center;';
 
-  var digerler = sirali.slice(1).map(function(p,i){
-    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.04);border-radius:12px;margin-top:8px;">'
-      +'<span style="font-size:14px;color:rgba(255,255,255,0.4);margin-right:10px;">'+(i===0?'🥈':i===1?'🥉':'4.')+'</span>'
-      +'<span style="flex:1;font-size:16px;font-weight:700;color:'+p.color+';text-align:left;">'+p.isim+'</span>'
-      +'<span style="font-size:17px;font-weight:900;color:rgba(255,255,255,0.5);">'+p.total+'</span>'
-      +'</div>';
-  }).join('');
+  var icerik = '';
 
-  box.innerHTML = '<div style="font-size:60px;animation:bounce2 1s ease-in-out infinite alternate;display:inline-block;filter:drop-shadow(0 0 16px rgba(255,215,0,0.5));">👑</div>'
-    +'<div style="font-size:12px;letter-spacing:0.3em;color:rgba(255,215,0,0.55);margin:8px 0 4px;font-weight:700;">KAZANAN</div>'
-    +'<div style="font-size:42px;font-weight:900;color:#ffd700;text-shadow:0 0 30px rgba(255,215,0,0.4);line-height:1.1;margin-bottom:4px;">'+kazanan.isim+'</div>'
-    +'<div style="font-size:14px;color:rgba(255,255,255,0.4);margin-bottom:16px;"><span style="color:#ffd700;font-weight:700;">'+kazanan.total+'</span> puan ile birinci!</div>'
-    +'<div style="background:rgba(255,215,0,0.07);border:1px solid rgba(255,215,0,0.2);border-radius:20px;padding:10px 20px;font-size:14px;color:rgba(255,215,0,0.8);font-weight:700;margin-bottom:16px;">'+slo+'</div>'
-    + digerler
-    +'<div style="display:flex;gap:10px;margin-top:20px;">'
-    +'<button onclick="document.getElementById(\'winner-modal\').remove()" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:14px;color:rgba(255,255,255,0.7);font-family:inherit;font-size:14px;font-weight:700;padding:14px;cursor:pointer;">← Oyuna Dön</button>'
-    +'<button onclick="document.getElementById(\'winner-modal\').remove();document.getElementById(\'reset-btn\').click()" style="flex:1;background:linear-gradient(135deg,#ffd700,#ff8c00);border:none;border-radius:14px;color:#000;font-family:inherit;font-size:14px;font-weight:900;padding:14px;cursor:pointer;">🔄 Yeni Oyun</button>'
-    +'</div>';
+  if (isTeam) {
+    // ── TAKıMLI MOD ──
+    var t1 = totals[0] + totals[1];
+    var t2 = totals[2] + totals[3];
+    var t1Wins = t1 <= t2;
+    var berabere = t1 === t2;
+    var winText = berabere ? '🤝 Berabere!' : (t1Wins ? '🔴 Takım 1 Kazandı!' : '🔵 Takım 2 Kazandı!');
+    var winColor = berabere ? '#ffd700' : (t1Wins ? '#ff6b8a' : '#5599ff');
 
+    icerik += '<div style="font-size:80px;animation:kronBounce 1.2s ease-in-out infinite alternate;filter:drop-shadow(0 0 24px rgba(255,215,0,0.6));margin-bottom:8px;">👑</div>';
+    icerik += '<div style="font-size:22px;font-weight:900;color:'+winColor+';margin-bottom:20px;animation:zoomIn 0.6s 0.05s cubic-bezier(0.34,1.56,0.64,1) both;">'+winText+'</div>';
+
+    // Takım 1 kutu
+    icerik += '<div style="width:100%;background:rgba(255,63,91,0.08);border:' +(t1Wins&&!berabere?'2px solid rgba(255,63,91,0.8)':'1px solid rgba(255,63,91,0.2)')+ ';border-radius:16px;padding:16px 20px;margin-bottom:10px;animation:slideUp 0.5s 0.15s both;display:flex;align-items:center;justify-content:space-between;">'
+      + '<div style="text-align:left;">'
+      + '<div style="font-size:16px;font-weight:700;color:#ff3f5b;margin-bottom:4px;">🔴 Takım 1</div>'
+      + '<div style="font-size:13px;color:rgba(255,255,255,0.5);">'+pname(0)+': '+totals[0]+'</div>'
+      + '<div style="font-size:13px;color:rgba(255,255,255,0.5);">'+pname(1)+': '+totals[1]+'</div>'
+      + (t1Wins&&!berabere?'<div style="font-size:11px;color:#ffd700;font-weight:800;margin-top:4px;">👑 KAZANAN</div>':'')
+      + '</div>'
+      + '<div style="font-size:52px;font-weight:900;color:#ff3f5b;">'+t1+'</div>'
+      + '</div>';
+
+    // Takım 2 kutu
+    icerik += '<div style="width:100%;background:rgba(0,120,255,0.08);border:' +(!t1Wins&&!berabere?'2px solid rgba(0,150,255,0.8)':'1px solid rgba(0,150,255,0.2)')+ ';border-radius:16px;padding:16px 20px;margin-bottom:20px;animation:slideUp 0.5s 0.25s both;display:flex;align-items:center;justify-content:space-between;">'
+      + '<div style="text-align:left;">'
+      + '<div style="font-size:16px;font-weight:700;color:#4488ff;margin-bottom:4px;">🔵 Takım 2</div>'
+      + '<div style="font-size:13px;color:rgba(255,255,255,0.5);">'+pname(2)+': '+totals[2]+'</div>'
+      + '<div style="font-size:13px;color:rgba(255,255,255,0.5);">'+pname(3)+': '+totals[3]+'</div>'
+      + (!t1Wins&&!berabere?'<div style="font-size:11px;color:#ffd700;font-weight:800;margin-top:4px;">👑 KAZANAN</div>':'')
+      + '</div>'
+      + '<div style="font-size:52px;font-weight:900;color:#4488ff;">'+t2+'</div>'
+      + '</div>';
+
+  } else {
+    // ── TAKıMSIZ MOD ──
+    var sirali = [0,1,2,3].map(function(i){
+      return {isim:pname(i), total:totals[i], color:['#ff3f5b','#ff8c00','#00e5ff','#00ff94'][i]};
+    }).sort(function(a,b){ return a.total-b.total; });
+    var kazanan = sirali[0];
+
+    icerik += '<div style="font-size:80px;animation:kronBounce 1.2s ease-in-out infinite alternate;filter:drop-shadow(0 0 24px rgba(255,215,0,0.6));margin-bottom:4px;">👑</div>';
+    icerik += '<div style="font-size:11px;letter-spacing:0.35em;color:rgba(255,215,0,0.55);font-weight:800;margin-bottom:6px;animation:fadeUp 0.5s 0.1s both;">KAZANAN</div>';
+    icerik += '<div style="font-size:clamp(36px,11vw,58px);font-weight:900;color:#ffd700;text-shadow:0 0 40px rgba(255,215,0,0.5);line-height:1.1;margin-bottom:6px;animation:zoomIn 0.6s 0.05s cubic-bezier(0.34,1.56,0.64,1) both;">'+kazanan.isim+'</div>';
+    icerik += '<div style="font-size:14px;color:rgba(255,255,255,0.4);margin-bottom:18px;animation:fadeUp 0.5s 0.2s both;"><span style="color:#ffd700;font-weight:800;font-size:18px;">'+kazanan.total+'</span> puan ile birinci!</div>';
+    icerik += '<div style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.25);border-radius:24px;padding:11px 22px;font-size:14px;color:rgba(255,215,0,0.85);font-weight:700;margin-bottom:20px;animation:fadeUp 0.5s 0.3s both;">'+slo+'</div>';
+
+    var digerler = sirali.slice(1).map(function(p,i){
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;margin-top:8px;animation:slideUp 0.5s '+(0.12*(i+1))+'s cubic-bezier(0.34,1.3,0.64,1) both;">'
+        +'<div style="display:flex;align-items:center;gap:12px;">'
+        +'<span style="font-size:18px;">'+(i===0?'🥈':i===1?'🥉':'4️⃣')+'</span>'
+        +'<span style="font-size:17px;font-weight:700;color:'+p.color+';">'+p.isim+'</span>'
+        +'</div>'
+        +'<span style="font-size:18px;font-weight:900;color:rgba(255,255,255,0.45);">'+p.total+'</span>'
+        +'</div>';
+    }).join('');
+    icerik += '<div style="width:100%;animation:fadeUp 0.5s 0.35s both;">'+ digerler +'</div>';
+  }
+
+  // Slogan (takımlıda da)
+  if (isTeam) {
+    icerik += '<div style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.25);border-radius:24px;padding:11px 22px;font-size:14px;color:rgba(255,215,0,0.85);font-weight:700;margin-bottom:20px;animation:fadeUp 0.5s 0.4s both;">'+slo+'</div>';
+  }
+
+  // Butonlar — 3 tane: Paylaş, Oyuna Dön, Yeni Oyun
+  icerik += '<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;width:100%;animation:fadeUp 0.5s 0.5s both;">'
+    +'<button id="winner-share-btn" style="width:100%;background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.35);border-radius:16px;color:#00e5ff;font-family:inherit;font-size:16px;font-weight:800;padding:16px;cursor:pointer;">📤 Sonucu Paylaş</button>'
+    +'<div style="display:flex;gap:10px;">'
+    +'<button onclick="document.getElementById(\'winner-modal\').remove()" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:16px;color:rgba(255,255,255,0.75);font-family:inherit;font-size:15px;font-weight:700;padding:14px;cursor:pointer;">← Oyuna Dön</button>'
+    +'<button onclick="document.getElementById(\'winner-modal\').remove();doReset();" style="flex:1;background:linear-gradient(135deg,#ffd700,#ff8c00);border:none;border-radius:16px;color:#000;font-family:inherit;font-size:15px;font-weight:900;padding:14px;cursor:pointer;box-shadow:0 6px 24px rgba(255,215,0,0.35);">🔄 Yeni Oyun</button>'
+    +'</div></div>';
+
+  box.innerHTML = icerik;
   overlay.appendChild(box);
   document.body.appendChild(overlay);
+
+  // Paylaş butonu — mevcut share-btn logic'ini tetikle
+  document.getElementById('winner-share-btn').addEventListener('click', function() {
+    document.getElementById('winner-modal').remove();
+    document.getElementById('share-btn').click();
+  });
 
   // Konfeti
   var cvcv = document.createElement('canvas');
@@ -1727,6 +1843,48 @@ function oyunuBitir() {
 }
 
 
+function ovTakimSec(takimli) {
+  var btn1 = document.getElementById('ov-takim-btn');
+  var btn2 = document.getElementById('ov-takimli-btn');
+  var n0 = document.getElementById('ov-n0');
+  var n1 = document.getElementById('ov-n1');
+  var n2 = document.getElementById('ov-n2');
+  var n3 = document.getElementById('ov-n3');
+  if (takimli) {
+    btn2.style.background = 'rgba(0,180,216,0.2)';
+    btn2.style.borderColor = 'rgba(0,180,216,0.8)';
+    btn2.style.color = '#00e5ff';
+    btn1.style.background = 'rgba(255,255,255,0.05)';
+    btn1.style.borderColor = 'rgba(255,255,255,0.12)';
+    btn1.style.color = 'rgba(255,255,255,0.4)';
+    // Takım 1 → kırmızı (oyuncu 1-2)
+    n0.style.background = 'rgba(255,63,91,0.15)';
+    n0.style.borderColor = 'rgba(255,63,91,0.6)';
+    n1.style.background = 'rgba(255,63,91,0.15)';
+    n1.style.borderColor = 'rgba(255,63,91,0.6)';
+    // Takım 2 → mavi (oyuncu 3-4)
+    n2.style.background = 'rgba(0,180,216,0.15)';
+    n2.style.borderColor = 'rgba(0,180,216,0.6)';
+    n3.style.background = 'rgba(0,180,216,0.15)';
+    n3.style.borderColor = 'rgba(0,180,216,0.6)';
+  } else {
+    btn1.style.background = 'rgba(255,215,0,0.15)';
+    btn1.style.borderColor = 'rgba(255,215,0,0.6)';
+    btn1.style.color = '#ffd700';
+    btn2.style.background = 'rgba(255,255,255,0.05)';
+    btn2.style.borderColor = 'rgba(255,255,255,0.12)';
+    btn2.style.color = 'rgba(255,255,255,0.4)';
+    // Normale dön
+    [n0,n1,n2,n3].forEach(function(n){
+      n.style.background = 'rgba(255,255,255,0.07)';
+      n.style.borderColor = 'rgba(255,255,255,0.12)';
+    });
+  }
+  window._ovTakimli = takimli;
+}
+// Başlangıçta takımsız seçili
+ovTakimSec(false);
+
 function oyunuBaslat() {
   // Overlay'deki isim inputlarını al
   [0,1,2,3].forEach(function(i){
@@ -1736,8 +1894,14 @@ function oyunuBaslat() {
     }
   });
   oyunBasladi = true;
+  // Overlay'deki takım seçimini uygula
+  if (window._ovTakimli) {
+    document.getElementById('team-btn') && document.getElementById('team-btn').click();
+  }
   var ov = document.getElementById('oyun-overlay-btn');
   if (ov) { ov.style.transition='opacity 0.3s'; ov.style.opacity='0'; setTimeout(function(){ov.style.display='none';},300); }
+  var rw = document.getElementById('rounds-wrap');
+  if (rw) rw.style.minHeight = '0';
   // Toplam ve Tur Ekle göster
   var tr = document.getElementById('total-row');
   var aw = document.getElementById('add-wrap');
@@ -1770,9 +1934,76 @@ function oyunuBaslat() {
     var aw = document.getElementById('add-wrap');
     if (tr) tr.style.display = '';
     if (aw) aw.style.display = '';
+    var rw = document.getElementById('rounds-wrap');
+    if (rw) rw.style.minHeight = '0';
   }
 })();
-/* ── Oyun Grafiği ── */
+
+function toggleTeam() {
+  isTeam = !isTeam;
+  if (isTeam) {
+    document.body.classList.add('team-mode');
+  } else {
+    document.body.classList.remove('team-mode');
+  }
+  buildHeader();
+  altTeamSync();
+}
+
+function toggleLock() {
+  isLocked = !isLocked;
+  if (isLocked) {
+    document.body.classList.add('locked');
+  } else {
+    document.body.classList.remove('locked');
+  }
+  altLockSync();
+}
+
+// Alt buton senkronizasyonu
+function altTeamSync() {
+  var btns = [document.getElementById('alt-team-btn2')];
+  btns.forEach(function(btn) {
+    if (!btn) return;
+    if (isTeam) {
+      btn.textContent = '👥 Takımlı';
+      btn.style.background = 'rgba(0,180,216,0.15)';
+      btn.style.borderColor = 'rgba(0,180,216,0.6)';
+      btn.style.color = '#00e5ff';
+    } else {
+      btn.textContent = '👤 Takımsız';
+      btn.style.background = 'rgba(255,255,255,0.07)';
+      btn.style.borderColor = 'rgba(255,255,255,0.2)';
+      btn.style.color = '#fff';
+    }
+  });
+}
+
+function altLockSync() {
+  var btns = [document.getElementById('alt-lock-btn2')];
+  btns.forEach(function(btn) {
+    if (!btn) return;
+    if (isLocked) {
+      btn.textContent = '🔒 Kilitli';
+      btn.style.background = 'rgba(233,69,96,0.12)';
+      btn.style.borderColor = 'rgba(233,69,96,0.5)';
+      btn.style.color = '#ff6b8a';
+    } else {
+      btn.textContent = '✏️ Kilitsiz';
+      btn.style.background = 'rgba(6,214,160,0.1)';
+      btn.style.borderColor = 'rgba(6,214,160,0.5)';
+      btn.style.color = '#06d6a0';
+    }
+  });
+}
+
+// lock-btn-top tıklanınca alt butonu da güncelle
+document.addEventListener('click', function(e) {
+  if (e.target.closest('#lock-btn-top')) setTimeout(altLockSync, 50);
+  if (e.target.closest('#team-btn')) setTimeout(altTeamSync, 50);
+});
+altLockSync();
+altTeamSync();
 var chartOpen = false;
 
 document.getElementById('chart-toggle-btn').addEventListener('click', function(){
