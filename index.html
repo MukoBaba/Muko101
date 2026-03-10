@@ -133,6 +133,11 @@
   0%   { background-position: -200% center; }
   100% { background-position: 200% center; }
 }
+@keyframes heartbeat {
+  0%   { box-shadow: 0 0 8px rgba(255,215,0,0.4), 0 0 16px rgba(255,140,0,0.2); }
+  50%  { box-shadow: 0 0 28px rgba(255,215,0,0.7), 0 0 50px rgba(255,140,0,0.35); }
+  100% { box-shadow: 0 0 8px rgba(255,215,0,0.4), 0 0 16px rgba(255,140,0,0.2); }
+}
 
 
 body {
@@ -983,7 +988,7 @@ body.team-mode .team-score-section { display: flex; }
       border:none;border-radius:16px;
       color:#000;font-family:inherit;font-size:22px;font-weight:900;
       padding:20px 52px;cursor:pointer;
-      box-shadow:0 8px 36px rgba(255,215,0,0.45);
+      animation: heartbeat 2.4s ease-in-out infinite;
       letter-spacing:0.03em;
     ">▶ OYUNU BAŞLAT</button>
     </div><!-- /iç kart -->
@@ -1013,7 +1018,7 @@ body.team-mode .team-score-section { display: flex; }
 </div>
 
 <!-- Kilit + Takım butonları — takım skoru üstü -->
-<div style="display:flex;gap:10px;padding:14px 16px 4px;">
+<div id="alt-buttons-wrap" style="display:none;gap:10px;padding:14px 16px 4px;">
   <button id="alt-lock-btn2" onclick="toggleLock()" style="
     flex:1;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.2);
     border-radius:14px;color:#fff;font-family:inherit;font-size:15px;font-weight:700;
@@ -1634,24 +1639,21 @@ function renderSaves() {
       if (!confirm('"' + s.label + '" oyununu yüklemek istiyor musun?')) return;
       state.names  = s.names;
       state.scores = s.scores;
-      // Takım modunu geri yükle
       isTeam = !!s.isTeam;
-      var btn = document.getElementById('team-btn');
-      if (isTeam) {
-        document.body.classList.add('team-mode');
-        btn.className = 'team-btn on';
-        btn.querySelector('.team-icon').textContent = '🔴🔵';
-        btn.querySelector('.team-label').textContent = 'Takımlı';
-      } else {
-        document.body.classList.remove('team-mode');
-        btn.className = 'team-btn';
-        btn.querySelector('.team-icon').textContent = '👥';
-        btn.querySelector('.team-label').textContent = 'Takımsız';
-      }
-      buildHeader();
-      buildRows();
-      buildTotalRow();
-      renderLb();
+      if (isTeam) { document.body.classList.add('team-mode'); }
+      else { document.body.classList.remove('team-mode'); }
+      oyunBasladi = true;
+      var ov = document.getElementById('oyun-overlay-btn');
+      if (ov) ov.style.display = 'none';
+      var tr = document.getElementById('total-row');
+      var aw = document.getElementById('add-wrap');
+      var rw = document.getElementById('rounds-wrap');
+      var abw = document.getElementById('alt-buttons-wrap');
+      if (tr) tr.style.display = '';
+      if (aw) aw.style.display = 'flex';
+      if (rw) rw.style.minHeight = '0';
+      if (abw) abw.style.display = 'flex';
+      buildHeader(); buildRows(); buildTotalRow(); renderLb();
     }; })(save));
 
     var delBtn = document.createElement('button');
@@ -1907,6 +1909,8 @@ function oyunuBaslat() {
   var aw = document.getElementById('add-wrap');
   if (tr) tr.style.display = '';
   if (aw) aw.style.display = 'flex';
+  var abw = document.getElementById('alt-buttons-wrap');
+  if (abw) abw.style.display = 'flex';
   // İlk 4 turu ekle
   if (state.scores.length === 0) {
     state.scores.push(['','','','']);
@@ -1933,9 +1937,11 @@ function oyunuBaslat() {
     var tr = document.getElementById('total-row');
     var aw = document.getElementById('add-wrap');
     if (tr) tr.style.display = '';
-    if (aw) aw.style.display = '';
+    if (aw) aw.style.display = 'flex';
     var rw = document.getElementById('rounds-wrap');
     if (rw) rw.style.minHeight = '0';
+    var abw = document.getElementById('alt-buttons-wrap');
+    if (abw) abw.style.display = 'flex';
   }
 })();
 
@@ -2651,8 +2657,9 @@ document.getElementById('share-btn').addEventListener('click', function() {
       var t2 = totals[2] + totals[3];
       var t1Wins = t1 <= t2;
       var WW = 640, HH = 680;
+      var cv = document.createElement('canvas');
       cv.width = WW; cv.height = HH;
-      c = cv.getContext('2d');
+      var c = cv.getContext('2d');
 
       function rrT(x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+h-r);c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);c.lineTo(x+r,y+h);c.quadraticCurveTo(x,y+h,x,y+h-r);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath();}
 
