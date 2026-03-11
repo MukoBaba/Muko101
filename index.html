@@ -36,7 +36,7 @@
 
 /* ── RESPONSIVE — tüm ekranlar ── */
 :root {
-  --col0: clamp(48px, 14vw, 72px);
+  --col0: clamp(58px, 16vw, 80px);
 }
 
 .player-names,
@@ -54,8 +54,7 @@
 }
 
 .score-cell input {
-  font-size: clamp(14px, 4.5vw, 20px);
-  min-height: clamp(42px, 12vw, 54px);
+  font-size: clamp(36px, 11vw, 46px) !important;
 }
 
 .total-cell {
@@ -105,7 +104,6 @@
 /* Çok küçük ekranlar (320px altı) */
 @media (max-width: 340px) {
   :root { --col0: 44px; }
-  .score-cell input { font-size: 18px; }
   .del-btn { font-size: 0.7rem; padding: 1px 2px; }
   .pname-dot { width: 7px; height: 7px; }
 }
@@ -347,6 +345,7 @@ body.team-mode .team-tag { display: block; }
   border-right: 2px solid rgba(255,215,0,0.3);
   background: rgba(0,0,0,0.1);
 }
+
 .round-num {
   font-size: 0.78rem; color: #c8a8ff; font-weight: 700;
   white-space: nowrap;
@@ -364,6 +363,8 @@ body.team-mode .team-tag { display: block; }
   position: relative;
   overflow: hidden;
   display: flex; align-items: center; justify-content: center;
+  margin: 3px 2px;
+  border-radius: 8px;
 }
 
 /* Watermark player name */
@@ -383,26 +384,22 @@ body.team-mode .team-tag { display: block; }
 .score-cell.pi2 .wm-label { color: #00e5ff; }
 .score-cell.pi3 .wm-label { color: #00ff94; }
 
-/* Sütun — her iki yandan içe neon */
+/* Sütun kutucuklar */
 .score-cell.pi0 {
-  border-left: 2px solid rgba(255,63,91,0.7);
-  background: linear-gradient(to right, rgba(255,63,91,0.07) 0%, transparent 35%, transparent 65%, rgba(255,63,91,0.04) 100%);
-  box-shadow: inset 3px 0 8px rgba(255,63,91,0.08), inset -3px 0 8px rgba(255,63,91,0.04);
+  border: 1.5px solid rgba(255,63,91,0.5);
+  background: rgba(255,63,91,0.07);
 }
 .score-cell.pi1 {
-  border-left: 2px solid rgba(255,140,0,0.7);
-  background: linear-gradient(to right, rgba(255,140,0,0.07) 0%, transparent 35%, transparent 65%, rgba(255,140,0,0.04) 100%);
-  box-shadow: inset 3px 0 8px rgba(255,140,0,0.08), inset -3px 0 8px rgba(255,140,0,0.04);
+  border: 1.5px solid rgba(255,140,0,0.5);
+  background: rgba(255,140,0,0.07);
 }
 .score-cell.pi2 {
-  border-left: 2px solid rgba(0,229,255,0.7);
-  background: linear-gradient(to right, rgba(0,229,255,0.07) 0%, transparent 35%, transparent 65%, rgba(0,229,255,0.04) 100%);
-  box-shadow: inset 3px 0 8px rgba(0,229,255,0.08), inset -3px 0 8px rgba(0,229,255,0.04);
+  border: 1.5px solid rgba(0,229,255,0.5);
+  background: rgba(0,229,255,0.07);
 }
 .score-cell.pi3 {
-  border-left: 2px solid rgba(0,255,148,0.7);
-  background: linear-gradient(to right, rgba(0,255,148,0.07) 0%, transparent 35%, transparent 65%, rgba(0,255,148,0.04) 100%);
-  box-shadow: inset 3px 0 8px rgba(0,255,148,0.08), inset -3px 0 8px rgba(0,255,148,0.04);
+  border: 1.5px solid rgba(0,255,148,0.5);
+  background: rgba(0,255,148,0.07);
 }
 
 /* Son satır alt çizgisi */
@@ -413,7 +410,7 @@ body.team-mode .team-tag { display: block; }
 .score-cell input {
   width: 100%; height: 100%; min-height: 54px;
   background: transparent; border: none; outline: none;
-  color: #fff; font-size: 26px; font-weight: 800;
+  color: #fff; font-size: clamp(36px, 11vw, 46px) !important; font-weight: 800;
   text-align: center; position: relative; z-index: 1;
   -moz-appearance: textfield;
 }
@@ -457,8 +454,8 @@ body.team-mode .team-tag { display: block; }
   background: rgba(255,255,255,0.07);
   border: 1.5px dashed rgba(255,255,255,0.2);
   color: rgba(255,255,255,0.6);
-  border-radius: 30px;
-  padding: 10px 28px;
+  border-radius: 14px;
+  padding: 10px 8px;
   font-size: 0.8rem; letter-spacing: 0.08em;
   cursor: pointer; touch-action: manipulation;
   transition: all 0.2s;
@@ -560,7 +557,6 @@ body.team-mode .team-score-section { display: flex; }
 
 /* ── Kayıt sistemi ── */
 .save-section { position: relative; z-index: 1;
-  margin: 14px 12px 12px;
   background: rgba(26,10,62,0.75);
   border-radius: 14px;
   overflow: hidden;
@@ -640,7 +636,7 @@ body.team-mode .team-score-section { display: flex; }
   text-align: center; padding: 18px;
   font-size: 0.7rem; color: #3a4a6a;
 }
-.reset-wrap { padding: 0 12px 20px; position: relative; z-index: 1; }
+.reset-wrap { padding: 10px 16px 10px; position: relative; z-index: 1; }
 .share-btn {
   width: 100%; padding: 14px;
   background: rgba(0,229,255,0.08);
@@ -1035,6 +1031,7 @@ body.team-mode .team-score-section { display: flex; }
     <h1>🃏 Yaz Boz</h1>
     <p>En az puan kazanır</p>
     <div id="clock" style="font-size:0.75rem; font-weight:700; color:#ffd700; letter-spacing:0.12em; margin-top:3px;"></div>
+    <div id="rtimer-0" style="font-size:0.78rem;font-weight:700;color:#c084fc;letter-spacing:0.06em;margin-top:2px;min-height:1em;"></div>
   </div>
   <button class="tool-btn wheel-btn" id="open-wheel" style="flex:0 0 auto; padding:10px 10px; min-width:64px; font-size:0.7rem; border-radius:12px; flex-direction:column; gap:3px;">
     <span style="font-size:1.4rem; line-height:1;">🎡</span>
@@ -1101,27 +1098,36 @@ body.team-mode .team-score-section { display: flex; }
 </div>
 
 <!-- Add round -->
-<div class="add-wrap" id="add-wrap" style="display:none;gap:10px;flex-wrap:wrap;">
-  <button class="add-btn" id="add-btn">＋ Tur Ekle</button>
-  <button id="bitis-btn" onclick="oyunuBitir()" style="
-    flex:1;min-width:120px;
-    background:rgba(255,63,91,0.12);
-    border:1px dashed rgba(255,63,91,0.4);
-    border-radius:50px;
-    color:#ff6b8a;
-    font-family:inherit;font-size:15px;font-weight:700;
-    padding:14px 20px;cursor:pointer;
-    transition:all 0.2s;
-  ">🏁 Oyunu Bitir</button>
+<div class="add-wrap" id="add-wrap" style="display:none;gap:8px;padding:10px 16px 0;">
+  <div style="display:flex;gap:8px;width:100%;">
+    <button id="durdur-btn" onclick="oyunuDurdur()" style="
+      flex:1;background:rgba(0,80,180,0.18);
+      border:1.5px solid rgba(60,120,255,0.45);
+      border-radius:14px;color:#60aaff;
+      font-family:inherit;font-size:13px;font-weight:700;
+      padding:9px 8px;cursor:pointer;transition:all 0.2s;
+    ">Durdur</button>
+    <button class="add-btn" id="add-btn" style="
+      flex:1;border-radius:14px;
+      padding:9px 8px;font-size:13px;
+    ">＋ Tur Ekle</button>
+    <button id="bitis-btn" onclick="oyunuBitir()" style="
+      flex:1;background:rgba(255,63,91,0.12);
+      border:1.5px solid rgba(255,63,91,0.4);
+      border-radius:14px;color:#ff6b8a;
+      font-family:inherit;font-size:13px;font-weight:700;
+      padding:9px 8px;cursor:pointer;transition:all 0.2s;
+    ">Oyunu Bitir</button>
+  </div>
 </div>
 
 <!-- Kilit + Takım butonları — takım skoru üstü -->
-<div id="alt-buttons-wrap" style="display:none;gap:10px;padding:14px 16px 4px;">
+<div id="alt-buttons-wrap" style="display:none;gap:8px;padding:10px 16px 0;">
   <button id="alt-lock-btn2" onclick="toggleLock()" style="
     flex:1;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.2);
     border-radius:14px;color:#fff;font-family:inherit;font-size:15px;font-weight:700;
     padding:14px 8px;cursor:pointer;transition:all 0.2s;
-  ">🔒 Kilitli</button>
+  ">🔒 Kilit</button>
   <button id="alt-team-btn2" onclick="toggleTeam()" style="
     flex:1;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.2);
     border-radius:14px;color:#fff;font-family:inherit;font-size:15px;font-weight:700;
@@ -1218,14 +1224,6 @@ body.team-mode .team-score-section { display: flex; }
 <canvas id="wh-confetti"></canvas>
 
 <!-- Kayıt Sistemi -->
-<div class="save-section">
-  <div class="save-header">💾 <span>Kayıtlar</span></div>
-  <div class="save-input-row">
-    <input class="save-name-inp" id="save-name-inp" type="text" placeholder="Oyun adı yaz... (örn: 15 Mart)">
-    <button class="save-go-btn" id="save-go-btn">💾 Kaydet</button>
-  </div>
-  <div class="saves-list" id="saves-list"></div>
-</div>
 
 <!-- Gizli paylaş tetikleyici (winner modal için) -->
 <button id="share-btn" style="display:none;">📤</button>
@@ -1235,7 +1233,7 @@ body.team-mode .team-score-section { display: flex; }
 </div>
 
 <!-- Kılavuz Butonu -->
-<div style="padding: 0 12px 12px;">
+<div style="padding: 0 16px 10px;">
   <button id="guide-btn" style="
     width:100%; padding:14px;
     background: rgba(255,215,0,0.08);
@@ -1288,7 +1286,8 @@ var guideItems = [
   { emoji: '▶️', title: 'Oyunu Başlat', desc: 'İsimleri yazıp "Oyunu Başlat" a bas. Takımlı oynamak istiyorsan önce "Takımlı" seç, sonra başlat.' },
   { emoji: '🔢', title: 'Puan Girme', desc: 'Her turun ilgili oyuncu sütununa puana dokun ve yaz. Enter\'a basınca puan onaylanır.' },
   { emoji: '➕', title: 'Tur Ekle / Sil', desc: '"+ Tur Ekle" ile yeni tur açarsın. Her turun yanındaki ✕ ile o turu silebilirsin.' },
-  { emoji: '✏️', title: 'Kilit / Düzenle', desc: '"Kilitli" modda puanlara dokunamazsın, yanlışlıkla değişmez. "Kilitsiz" yapınca serbestçe düzenleyebilirsin.' },
+  { emoji: '✏️', title: 'Kilitli / Kilitsiz (Puan Kilidi)', desc: '"Kilitli" modda sütunlardaki puanlara dokunamazsın, yanlışlıkla değişmez. "Kilitsiz" yapınca tekrar puan yazabilirsin. Oyun başladıktan sonra altta görünür.' },
+  { emoji: '🔒', title: 'Dokunmatik Kilit (Sol Üst)', desc: 'Sol üstteki "Serbest/Kilitle" butonu tüm ekranı kilitler — hiçbir yere dokunamazsın. Yanlışlıkla puan değişmesini önler. Kilidi açmak için butona çift dokun.' },
   { emoji: '👥', title: 'Takımlı Mod', desc: 'Takımlı modda sol iki oyuncu Takım 1 (🔴), sağ iki oyuncu Takım 2 (🔵) olur. Toplam puanları alt kısımda görünür.' },
   { emoji: '💾', title: 'Kayıt & Yükleme', desc: 'Oyun adı yazıp "Kaydet" e basınca anlık durum kaydedilir. "Yükle" ile istediğin zaman o oyuna dönebilirsin.' },
   { emoji: '🏁', title: 'Oyunu Bitir', desc: '"Oyunu Bitir" butonuyla kazananı görebilirsin. Sonucu paylaşabilir ya da yeni oyun başlatabilirsin.' },
@@ -1331,7 +1330,7 @@ function guideDunno(btn) {
   btn.style.color = '#ff3f5b';
 }
 
-document.getElementById('guide-btn').addEventListener('click', function(){
+(function(){ var _el = document.getElementById('guide-btn'); if(_el) _el.addEventListener('click', function(){
   var overlay = document.getElementById('guide-overlay');
   var box = document.getElementById('guide-box');
   overlay.style.display = 'block';
@@ -1342,7 +1341,7 @@ document.getElementById('guide-btn').addEventListener('click', function(){
       box.style.opacity = '1';
     });
   });
-});
+}); })();
 
 function closeGuide() {
   var overlay = document.getElementById('guide-overlay');
@@ -1353,10 +1352,11 @@ function closeGuide() {
   setTimeout(function(){ overlay.style.display = 'none'; }, 320);
 }
 
-document.getElementById('guide-close').addEventListener('click', closeGuide);
-document.getElementById('guide-overlay').addEventListener('click', function(e){
+(function(){ var _el = document.getElementById('guide-close'); if(_el) _el.addEventListener('click', closeGuide);
+})();
+(function(){ var _el = document.getElementById('guide-overlay'); if(_el) _el.addEventListener('click', function(e){
   if (e.target === this) closeGuide();
-});
+}); })();
 </script>
 <script>
 var NAMES    = ['Oyuncu 1','Oyuncu 2','Oyuncu 3','Oyuncu 4'];
@@ -1365,10 +1365,81 @@ var isLocked = true;
 var isTeam   = false;
 document.body.classList.add('locked');
 
+/* ── Ses Efektleri ── */
+var audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playSound(type) {
+  try {
+    var ctx = getAudioCtx();
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    if (type === 'score') {
+      osc.frequency.setValueAtTime(523, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(784, ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.18, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+      osc.start(); osc.stop(ctx.currentTime + 0.15);
+    } else if (type === 'win') {
+      var notes = [523, 659, 784, 1047];
+      notes.forEach(function(freq, i) {
+        var o = ctx.createOscillator();
+        var g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0, ctx.currentTime + i * 0.12);
+        g.gain.linearRampToValueAtTime(0.22, ctx.currentTime + i * 0.12 + 0.05);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.12 + 0.25);
+        o.start(ctx.currentTime + i * 0.12);
+        o.stop(ctx.currentTime + i * 0.12 + 0.25);
+      });
+    } else if (type === 'delete') {
+      osc.frequency.setValueAtTime(300, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+      osc.start(); osc.stop(ctx.currentTime + 0.1);
+    }
+  } catch(e) {}
+}
+
+/* ── Tur Sayaçları ── */
+var roundTimers = {};  // ri -> { start: timestamp, elapsed: seconds }
+function startRoundTimer(ri) {
+  if (!roundTimers[ri]) roundTimers[ri] = { start: Date.now(), elapsed: 0 };
+}
+function stopRoundTimer(ri) {
+  if (roundTimers[ri] && roundTimers[ri].start) {
+    roundTimers[ri].elapsed += Math.floor((Date.now() - roundTimers[ri].start) / 1000);
+    roundTimers[ri].start = null;
+  }
+}
+function getRoundTime(ri) {
+  if (!roundTimers[ri]) return '';
+  var total = roundTimers[ri].elapsed;
+  if (roundTimers[ri].start) total += Math.floor((Date.now() - roundTimers[ri].start) / 1000);
+  if (total < 1) return '';
+  var m = Math.floor(total / 60), s = total % 60;
+  return m > 0 ? m + 'd ' + s + 's' : s + 's';
+}
+function updateRoundTimerDisplay(ri) {
+  var el = document.getElementById('rtimer-' + ri);
+  if (!el) return;
+  var t = getRoundTime(ri);
+  el.textContent = t ? '⏱ ' + t : '';
+}
+// Her saniye güncelle
+setInterval(function() {
+  if (roundTimers[0] && roundTimers[0].start) updateRoundTimerDisplay(0);
+}, 1000);
+
 var state = {
   names:  ['','','',''],
-  rounds: 4,          // current round count
-  scores: []          // scores[ri][pi]
+  rounds: 4,
+  scores: []
 };
 
 // Init scores — boş başla
@@ -1395,10 +1466,10 @@ function buildHeader() {
       'position:static;transform:none;margin:0;' +
       'background:' + (ekranKilitli ? 'rgba(233,69,96,0.2)' : 'rgba(255,255,255,0.07)') + ';' +
       'border:1.5px solid ' + (ekranKilitli ? 'rgba(233,69,96,0.7)' : 'rgba(255,255,255,0.2)') + ';' +
-      'border-radius:10px;cursor:pointer;padding:6px 4px;width:100%;text-align:center;' +
+      'border-radius:10px;cursor:pointer;padding:5px 4px;width:57px;text-align:center;' +
     '">' +
       '<span style="font-size:1rem;display:block;line-height:1;">' + (ekranKilitli ? '🔒' : '🔓') + '</span>' +
-      '<span style="font-size:0.38rem;letter-spacing:0.06em;color:' + (ekranKilitli ? '#ff6b8a' : '#9a8abb') + ';text-transform:uppercase;display:block;margin-top:2px;">' + (ekranKilitli ? 'Kilitli' : 'Kilitsiz') + '</span>' +
+      '<span style="font-size:0.36rem;letter-spacing:0.05em;color:' + (ekranKilitli ? '#ff6b8a' : '#9a8abb') + ';text-transform:uppercase;display:block;margin-top:2px;">' + (ekranKilitli ? 'Kilitle' : 'Serbest') + '</span>' +
     '</button>';
   wrap.appendChild(corner);
 
@@ -1528,8 +1599,9 @@ function makeRow(ri, anim) {
   lbl.textContent = (ri+1) + '. Tur';
   var del = document.createElement('button');
   del.className = 'del-btn'; del.type = 'button'; del.textContent = '✕';
-  del.addEventListener('click', (function(ri){ return function(){ deleteRound(ri); }; })(ri));
-  lc.appendChild(lbl); lc.appendChild(del);
+  del.addEventListener('click', (function(ri){ return function(){ playSound('delete'); deleteRound(ri); }; })(ri));
+  lc.appendChild(lbl);
+  lc.appendChild(del);
   row.appendChild(lc);
 
   for (var pi = 0; pi < 4; pi++) {
@@ -1558,6 +1630,10 @@ function makeRow(ri, anim) {
       inp.addEventListener('input', (function(wm, ri, pi){ return function(){
         state.scores[ri][pi] = this.value;
         wm.style.display = this.value !== '' ? 'none' : '';
+        if (this.value !== '') {
+          playSound('score');
+          startRoundTimer(ri);
+        }
         hlRow(ri); refreshTotals(); renderLb();
       }; })(wm, ri, pi));
 
@@ -1565,6 +1641,9 @@ function makeRow(ri, anim) {
         if (e.key !== 'Enter') return;
         e.preventDefault();
         if (this.value === '') { this.blur(); return; }
+        // Tüm hücreler doldu mu kontrol et
+        var allFilled = state.scores[ri].every(function(v){ return v !== ''; });
+        if (allFilled) stopRoundTimer(ri);
         if (!confirm('Emin misin baba? 🤔')) {
           this.value = state.scores[ri][pi] = '';
           hlRow(ri); refreshTotals(); renderLb();
@@ -1595,7 +1674,7 @@ function deleteRound(ri) {
 }
 
 /* ── Add round ── */
-document.getElementById('add-btn').addEventListener('click', function(){
+(function(){ var _el = document.getElementById('add-btn'); if(_el) _el.addEventListener('click', function(){
   var ri = state.scores.length;
   state.scores.push(['','','','']);
   var wrap = document.getElementById('rounds-wrap');
@@ -1605,20 +1684,27 @@ document.getElementById('add-btn').addEventListener('click', function(){
   // scroll into view
   var el = document.getElementById('row-' + ri);
   if (el) el.scrollIntoView({ behavior:'smooth', block:'nearest' });
-});
+}); })();
 
 /* ── Leaderboard ── */
 /* ── Takım skoru güncelle ── */
 function updateTeamScores() {
   var t1 = total(0) + total(1);
   var t2 = total(2) + total(3);
-  document.getElementById('team-score-red').textContent  = t1;
-  document.getElementById('team-score-blue').textContent = t2;
-  document.getElementById('team-names-red').innerHTML  = pname(0) + '<br>' + pname(1);
-  document.getElementById('team-names-blue').innerHTML = pname(2) + '<br>' + pname(3);
+  var r = document.getElementById('team-score-red');
+  var b = document.getElementById('team-score-blue');
+  var nr = document.getElementById('team-names-red');
+  var nb = document.getElementById('team-names-blue');
+  var wr = document.getElementById('team-winner-red');
+  var wb = document.getElementById('team-winner-blue');
+  if (!r || !b || !nr || !nb || !wr || !wb) return;
+  r.textContent  = t1;
+  b.textContent = t2;
+  nr.innerHTML  = pname(0) + '<br>' + pname(1);
+  nb.innerHTML = pname(2) + '<br>' + pname(3);
   var hasAny = state.scores.some(function(r){ return r.some(function(v){ return v !== ''; }); });
-  document.getElementById('team-winner-red').className  = 'team-winner-tag' + (hasAny && t1 < t2 ? ' show' : '');
-  document.getElementById('team-winner-blue').className = 'team-winner-tag' + (hasAny && t2 < t1 ? ' show' : '');
+  wr.className  = 'team-winner-tag' + (hasAny && t1 < t2 ? ' show' : '');
+  wb.className = 'team-winner-tag' + (hasAny && t2 < t1 ? ' show' : '');
 }
 
 function renderLb() {
@@ -1699,6 +1785,7 @@ function setSaves(saves) {
 
 function renderSaves() {
   var list = document.getElementById('saves-list');
+  if (!list) return;
   var saves = getSaves();
   list.innerHTML = '';
   if (saves.length === 0) {
@@ -1728,6 +1815,11 @@ function renderSaves() {
       state.names  = s.names;
       state.scores = s.scores;
       isTeam = !!s.isTeam;
+      // Timer'ı geri yükle ve devam ettir
+      roundTimers = {};
+      if (s.timerElapsed > 0) {
+        roundTimers[0] = { start: Date.now(), elapsed: s.timerElapsed };
+      }
       if (isTeam) { document.body.classList.add('team-mode'); }
       else { document.body.classList.remove('team-mode'); }
       oyunBasladi = true;
@@ -1762,24 +1854,24 @@ function renderSaves() {
   });
 }
 
-document.getElementById('save-go-btn').addEventListener('click', function(){
+(function(){ var _el = document.getElementById('save-go-btn'); if(_el) _el.addEventListener('click', function(){
   var label = document.getElementById('save-name-inp').value.trim();
   if (!label) { alert('Lütfen bir oyun adı yaz!'); return; }
   var saves = getSaves();
   var now = new Date();
   var date = now.toLocaleDateString('tr-TR') + ' ' + now.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
-  saves.push({ label: label, date: date, names: state.names.slice(), scores: state.scores.map(function(r){ return r.slice(); }), isTeam: isTeam });
+  saves.push({ label: label, date: date, names: state.names.slice(), scores: state.scores.map(function(r){ return r.slice(); }), isTeam: isTeam, timerElapsed: roundTimers[0] ? (roundTimers[0].elapsed + (roundTimers[0].start ? Math.floor((Date.now()-roundTimers[0].start)/1000) : 0)) : 0 });
   setSaves(saves);
   document.getElementById('save-name-inp').value = '';
   renderSaves();
   alert('"' + label + '" kaydedildi! ✅');
-});
+}); })();
 
 /* ── Reset ── */
-document.getElementById('reset-btn').addEventListener('click', function(){
+(function(){ var _el = document.getElementById('reset-btn'); if(_el) _el.addEventListener('click', function(){
   if (!confirm('Puanlar ve turlar sıfırlansın mı?\nİsimler korunur.')) return;
   doReset();
-});
+}); })();
 
 function doReset() {
   state.scores = [['','','',''],['','','',''],['','','',''],['','','','']];
@@ -1813,14 +1905,46 @@ setInterval(updateClock, 1000);
 /* ── isTeam ve isLocked buildHeader içinde yönetiliyor ── */
 
 /* ── Init ── */
-buildHeader();
-buildRows();
-buildTotalRow();
-renderLb();
+function initApp() {
+  buildHeader();
+  buildRows();
+  buildTotalRow();
+  renderLb();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
 
 /* ── Oyun Başlat Overlay ── */
 var oyunBasladi = false;
+/* ── Oyunu Durdur / Devam Et ── */
+var oyunDurdu = false;
+function oyunuDurdur() {
+  var btn = document.getElementById('durdur-btn');
+  if (!btn) return;
+  if (!oyunDurdu) {
+    // Durdur
+    oyunDurdu = true;
+    stopRoundTimer(0);
+    btn.textContent = '▶ Devam';
+    btn.style.background = 'rgba(0,200,100,0.18)';
+    btn.style.borderColor = 'rgba(0,220,120,0.5)';
+    btn.style.color = '#00e584';
+  } else {
+    // Devam et
+    oyunDurdu = false;
+    if (roundTimers[0]) roundTimers[0].start = Date.now();
+    btn.textContent = '⏸ Durdur';
+    btn.style.background = 'rgba(0,80,180,0.18)';
+    btn.style.borderColor = 'rgba(60,120,255,0.45)';
+    btn.style.color = '#60aaff';
+  }
+}
+
 function oyunuBitir() {
+  playSound('win');
   var totals = [0,1,2,3].map(function(p) {
     return state.scores.reduce(function(s,r){ return s+(parseInt(r[p])||0); },0);
   });
@@ -1881,7 +2005,9 @@ function oyunuBitir() {
     icerik += '<div style="font-size:80px;animation:kronBounce 1.2s ease-in-out infinite alternate;filter:drop-shadow(0 0 24px rgba(255,215,0,0.6));margin-bottom:4px;">👑</div>';
     icerik += '<div style="font-size:11px;letter-spacing:0.35em;color:rgba(255,215,0,0.55);font-weight:800;margin-bottom:6px;animation:fadeUp 0.5s 0.1s both;">KAZANAN</div>';
     icerik += '<div style="font-size:clamp(36px,11vw,58px);font-weight:900;color:#ffd700;text-shadow:0 0 40px rgba(255,215,0,0.5);line-height:1.1;margin-bottom:6px;animation:zoomIn 0.6s 0.05s cubic-bezier(0.34,1.56,0.64,1) both;">'+kazanan.isim+'</div>';
-    icerik += '<div style="font-size:14px;color:rgba(255,255,255,0.4);margin-bottom:18px;animation:fadeUp 0.5s 0.2s both;"><span style="color:#ffd700;font-weight:800;font-size:18px;">'+kazanan.total+'</span> puan ile birinci!</div>';
+    icerik += '<div style="font-size:14px;color:rgba(255,255,255,0.4);margin-bottom:10px;animation:fadeUp 0.5s 0.2s both;"><span style="color:#ffd700;font-weight:800;font-size:18px;">'+kazanan.total+'</span> puan ile birinci!</div>';
+    var oyunSuresi = getRoundTime(0);
+    if (oyunSuresi) icerik += '<div style="font-size:13px;color:#c084fc;font-weight:700;margin-bottom:14px;animation:fadeUp 0.5s 0.25s both;">⏱ Oyun süresi: '+oyunSuresi+'</div>';
     icerik += '<div style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.25);border-radius:24px;padding:11px 22px;font-size:14px;color:rgba(255,215,0,0.85);font-weight:700;margin-bottom:20px;animation:fadeUp 0.5s 0.3s both;">'+slo+'</div>';
 
     var digerler = sirali.slice(1).map(function(p,i){
@@ -2078,12 +2204,12 @@ function altLockSync() {
   btns.forEach(function(btn) {
     if (!btn) return;
     if (isLocked) {
-      btn.textContent = '🔒 Kilitli';
+      btn.textContent = '🔒 Kilit';
       btn.style.background = 'rgba(233,69,96,0.12)';
       btn.style.borderColor = 'rgba(233,69,96,0.5)';
       btn.style.color = '#ff6b8a';
     } else {
-      btn.textContent = '✏️ Kilitsiz';
+      btn.textContent = '✏️ Düzenle';
       btn.style.background = 'rgba(6,214,160,0.1)';
       btn.style.borderColor = 'rgba(6,214,160,0.5)';
       btn.style.color = '#06d6a0';
@@ -2100,12 +2226,12 @@ altLockSync();
 altTeamSync();
 var chartOpen = false;
 
-document.getElementById('chart-toggle-btn').addEventListener('click', function(){
+(function(){ var _el = document.getElementById('chart-toggle-btn'); if(_el) _el.addEventListener('click', function(){
   chartOpen = !chartOpen;
   document.getElementById('chart-body').className = 'chart-body' + (chartOpen ? ' open' : '');
   document.getElementById('chart-toggle-icon').textContent = chartOpen ? '▲' : '▼';
   if (chartOpen) renderChart();
-});
+}); })();
 
 function renderChart() {
   var section = document.getElementById('chart-section');
@@ -2219,17 +2345,17 @@ function closeModal(modalId, boxId) {
 var DICE_FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
 var diceHistory = [];
 
-document.getElementById('open-dice').addEventListener('click', function(){
+(function(){ var _el = document.getElementById('open-dice'); if(_el) _el.addEventListener('click', function(){
   openModal('dice-modal','dice-box');
-});
-document.getElementById('dice-close').addEventListener('click', function(){
+}); })();
+(function(){ var _el = document.getElementById('dice-close'); if(_el) _el.addEventListener('click', function(){
   closeModal('dice-modal','dice-box');
-});
-document.getElementById('dice-modal').addEventListener('click', function(e){
+}); })();
+(function(){ var _el = document.getElementById('dice-modal'); if(_el) _el.addEventListener('click', function(e){
   if (e.target === this) closeModal('dice-modal','dice-box');
-});
+}); })();
 
-document.getElementById('dice-roll-btn').addEventListener('click', function(){
+(function(){ var _el = document.getElementById('dice-roll-btn'); if(_el) _el.addEventListener('click', function(){
   var face   = document.getElementById('dice-face');
   var result = document.getElementById('dice-result');
   var btn    = this;
@@ -2269,7 +2395,7 @@ document.getElementById('dice-roll-btn').addEventListener('click', function(){
       btn.disabled = false;
     }
   }, 55);
-});
+}); })();
 
 /* ── Çarkıfelek ── */
 var wheelAngle    = 0;
@@ -2388,23 +2514,23 @@ function addWheelItem(val) {
   renderChips();
 }
 
-document.getElementById('wheel-add-go').addEventListener('click', function() {
+(function(){ var _el = document.getElementById('wheel-add-go'); if(_el) _el.addEventListener('click', function() {
   var inp = document.getElementById('wheel-add-inp');
   addWheelItem(inp.value); inp.value = ''; inp.focus();
-});
-document.getElementById('wheel-add-inp').addEventListener('keydown', function(e) {
+}); })();
+(function(){ var _el = document.getElementById('wheel-add-inp'); if(_el) _el.addEventListener('keydown', function(e) {
   if (e.key === 'Enter') {
     e.preventDefault();
     addWheelItem(this.value); this.value = '';
   }
-});
+}); })();
 
 /* -- Temizle -- */
-document.getElementById('wheel-clear-btn').addEventListener('click', function() {
+(function(){ var _el = document.getElementById('wheel-clear-btn'); if(_el) _el.addEventListener('click', function() {
   if (wheelItems.length === 0) return;
   if (!confirm('Tüm seçenekler silinsin mi?')) return;
   wheelItems = []; renderChips();
-});
+}); })();
 
 /* -- Hazır listeler -- */
 document.querySelectorAll('.w-preset').forEach(function(btn) {
@@ -2465,19 +2591,19 @@ function launchConfetti() {
 }
 
 /* -- Modal aç/kapa -- */
-document.getElementById('open-wheel').addEventListener('click', function() {
+(function(){ var _el = document.getElementById('open-wheel'); if(_el) _el.addEventListener('click', function() {
   openModal('wheel-modal','wheel-box');
   setTimeout(function(){ drawWheel(null, wheelAngle); }, 50);
-});
-document.getElementById('wheel-close').addEventListener('click', function() {
+}); })();
+(function(){ var _el = document.getElementById('wheel-close'); if(_el) _el.addEventListener('click', function() {
   closeModal('wheel-modal','wheel-box');
-});
-document.getElementById('wheel-modal').addEventListener('click', function(e) {
+}); })();
+(function(){ var _el = document.getElementById('wheel-modal'); if(_el) _el.addEventListener('click', function(e) {
   if (e.target === this) closeModal('wheel-modal','wheel-box');
-});
+}); })();
 
 /* -- Çevir -- */
-document.getElementById('wheel-spin-btn').addEventListener('click', function() {
+(function(){ var _el = document.getElementById('wheel-spin-btn'); if(_el) _el.addEventListener('click', function() {
   if (wheelItems.length < 2) { alert('En az 2 seçenek ekle!'); return; }
   if (wheelSpinning) return;
 
@@ -2536,9 +2662,14 @@ document.getElementById('wheel-spin-btn').addEventListener('click', function() {
   }
 
   requestAnimationFrame(spinStep);
-});
+}); })();
 
-renderSaves();
+// saves-list DOM'a geldikten sonra yükle
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function(){ renderSaves(); });
+} else {
+  renderSaves();
+}
 </script>
 <script>
 /* ── Takım Yıldızı Animasyonu ── */
@@ -2711,7 +2842,7 @@ renderSaves();
 </script>
 <script>
 /* ── Paylaş ── */
-document.getElementById('share-btn').addEventListener('click', function() {
+(function(){ var _el = document.getElementById('share-btn'); if(_el) _el.addEventListener('click', function() {
   var btn = this;
   btn.textContent = '⏳ Hazırlanıyor...';
   btn.disabled = true;
@@ -3010,7 +3141,7 @@ document.getElementById('share-btn').addEventListener('click', function() {
     btn.disabled = false;
     alert('Hata: ' + err.message);
   }
-});
+}); })();
 </script>
 
 
@@ -3034,6 +3165,15 @@ document.getElementById('share-btn').addEventListener('click', function() {
     </div>
     <div class="notes-list" id="quick-notes-list"></div>
   </section>
+
+  <div class="save-section">
+    <div class="save-header">💾 <span>Kayıtlar</span></div>
+    <div class="save-input-row">
+      <input class="save-name-inp" id="save-name-inp" type="text" placeholder="Oyun adı yaz... (örn: 15 Mart)">
+      <button class="save-go-btn" id="save-go-btn">💾 Kaydet</button>
+    </div>
+    <div class="saves-list" id="saves-list"></div>
+  </div>
 
   <section class="info-card" aria-label="Muko101 açıklama">
     <h2>📝 Muko101: Yaz Boz, Okey 101 ve Not Defteri</h2>
@@ -3082,7 +3222,7 @@ document.getElementById('share-btn').addEventListener('click', function() {
   var sheetClose = document.getElementById('note-sheet-close');
   var sheetUse = document.getElementById('note-sheet-use');
   var sheetDelete = document.getElementById('note-sheet-delete');
-  if(!area || !saveBtn || !clearBtn || !state || !count || !list || !sheet) return;
+  if(!area || !saveBtn || !clearBtn || !state || !count || !list || !sheet || !sheetClose || !sheetUse || !sheetDelete) return;
 
   var DRAFT_KEY = 'muko101_quick_notes_draft_v2';
   var LIST_KEY = 'muko101_quick_notes_items_v2';
