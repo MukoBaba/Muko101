@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MukoCan Chat</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f0620;
+      color: #fff;
+    }
+    .wrap {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .card {
+      background: #1a0b33;
+      border: 1px solid #3d216d;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 26px;
+      text-align: center;
+      color: #ffd54a;
+    }
+    .muted {
+      color: #c8b9ea;
+      font-size: 14px;
+    }
+    input, button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid #53308b;
+      background: #120824;
+      color: #fff;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    button {
+      background: #6a2cff;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.92; }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .chat-box {
+      height: 420px;
+      overflow-y: auto;
+      padding: 10px;
+      border-radius: 12px;
+      background: #120824;
+      border: 1px solid #53308b;
+      margin-top: 12px;
+    }
+    .msg {
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      border-radius: 12px;
+      background: #241046;
+      border-left: 4px solid #8c52ff;
+      word-break: break-word;
+    }
+    .msg .top {
+      font-size: 13px;
+      color: #ffd54a;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .msg .text {
+      font-size: 15px;
+      color: #fff;
+    }
+    .hidden { display: none; }
+    .small {
+      font-size: 12px;
+      color: #aa98d9;
+      text-align: center;
+      margin-top: 10px;
+    }
+    .status {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #7dffbc;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>MukoCan Chat</h1>
+      <div class="muted">Oda kodu gir, ismini yaz, çevrimiçi konuş.</div>
+
+      <div id="joinSection">
+        <input type="text" id="roomInput" placeholder="Oda kodu yaz (örnek: oda101)" />
+        <input type="text" id="nameInput" placeholder="İsmini yaz" />
+        <button id="joinBtn">Odaya Gir</button>
+        <div class="small">Not: Oda kodu aynıysa herkes aynı sohbete girer.</div>
+      </div>
+
+      <div id="chatSection" class="hidden">
+        <div class="row">
+          <input type="text" id="currentRoom" disabled />
+          <input type="text" id="currentName" disabled />
+        </div>
+
+        <div id="status" class="status">Bağlanıyor...</div>
+
+        <div id="chatBox" class="chat-box"></div>
+
+        <input type="text" id="messageInput" placeholder="Mesaj yaz..." />
+        <button id="sendBtn">Gönder</button>
+        <button id="leaveBtn" style="background:#522099;">Odadan Çık</button>
+
+        <div class="small">Mesajlar Supabase üstünde tutulur.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    let supabase;
+    try {
+      const supabaseUrl = "https://zxlbfzfccbdciqdmqmsy.supabase.co";
+      const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4bGJmemZjY2JkY2lxZG1xbXN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNTg4NDUsImV4cCI6MjA4ODgzNDg0NX0.4QmR0PGik--bMaSL7LugNAgxZsyzgFOiuXxh8B8V9FM";
+      supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    } catch(e) {
+      alert("Supabase başlatılamadı: " + e.message);
+    }
+
+    const joinSection = document.getElementById("joinSection");
+    const chatSection = document.getElementById("chatSection");
+    const roomInput = document.getElementById("roomInput");
+    const nameInput = document.getElementById("nameInput");
+    const joinBtn = document.getElementById("joinBtn");
+    const currentRoom = document.getElementById("currentRoom");
+    const currentName = document.getElementById("currentName");
+    const chatBox = document.getElementById("chatBox");
+    const messageInput = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const leaveBtn = document.getElementById("leaveBtn");
+    const statusBox = document.getElementById("status");
+
+    let activeRoom = "";
+    let activeName = "";
+    let channel = null;
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatTime(dateStr) {
+      const d = new Date(dateStr);
+      return d.toLocaleString("tr-TR");
+    }
+
+    function saveLocal() {
+      localStorage.setItem("mukocan_room", activeRoom);
+      localStorage.setItem("mukocan_name", activeName);
+    }
+
+    function clearLocal() {
+      localStorage.removeItem("mukocan_room");
+      localStorage.removeItem("mukocan_name");
+    }
+
+    function renderMessages(messages) {
+      chatBox.innerHTML = "";
+      messages.forEach(addMessageToScreen);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function addMessageToScreen(msg) {
+      const item = document.createElement("div");
+      item.className = "msg";
+      item.innerHTML = `
+        <div class="top">
+          <span>${escapeHtml(msg.name || "Adsız")}</span>
+          <span>${formatTime(msg.created_at)}</span>
+        </div>
+        <div class="text">${escapeHtml(msg.message || "")}</div>
+      `;
+      chatBox.appendChild(item);
+    }
+
+    async function loadMessages() {
+      const { data, error } = await supabase
+        .from("messages")
+        .select("*")
+        .eq("room", activeRoom)
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        statusBox.textContent = "Mesajlar alınamadı.";
+        console.error(error);
+        return;
+      }
+
+      renderMessages(data || []);
+      statusBox.textContent = "Bağlandı.";
+    }
+
+    async function sendMessage() {
+      const text = messageInput.value.trim();
+      if (!text) return;
+      if (!activeRoom || !activeName) return;
+
+      sendBtn.disabled = true;
+
+      const { error } = await supabase.from("messages").insert([
+        {
+          room: activeRoom,
+          name: activeName,
+          message: text
+        }
+      ]);
+
+      sendBtn.disabled = false;
+
+      if (error) {
+        alert("Mesaj gönderilemedi.");
+        console.error(error);
+        return;
+      }
+
+      messageInput.value = "";
+      messageInput.focus();
+    }
+
+    async function joinRoom() {
+      const room = roomInput.value.trim();
+      const name = nameInput.value.trim();
+
+      if (!room || !name) {
+        alert("Oda kodu ve isim gir.");
+        return;
+      }
+
+      activeRoom = room;
+      activeName = name;
+
+      saveLocal();
+
+      currentRoom.value = "Oda: " + activeRoom;
+      currentName.value = "İsim: " + activeName;
+
+      joinSection.classList.add("hidden");
+      chatSection.classList.remove("hidden");
+      statusBox.textContent = "Mesajlar yükleniyor...";
+
+      await loadMessages();
+      subscribeRealtime();
+    }
+
+    function leaveRoom() {
+      if (channel) {
+        supabase.removeChannel(channel);
+        channel = null;
+      }
+
+      activeRoom = "";
+      activeName = "";
+      clearLocal();
+
+      joinSection.classList.remove("hidden");
+      chatSection.classList.add("hidden");
+      chatBox.innerHTML = "";
+      roomInput.value = "";
+      nameInput.value = "";
+      messageInput.value = "";
+      statusBox.textContent = "";
+    }
+
+    function subscribeRealtime() {
+      if (channel) {
+        supabase.removeChannel(channel);
+        channel = null;
+      }
+
+      channel = supabase
+        .channel("room-" + activeRoom)
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "messages",
+            filter: "room=eq." + activeRoom
+          },
+          (payload) => {
+            addMessageToScreen(payload.new);
+            chatBox.scrollTop = chatBox.scrollHeight;
+          }
+        )
+        .subscribe((status) => {
+          if (status === "SUBSCRIBED") {
+            statusBox.textContent = "Canlı bağlantı açık.";
+          }
+        });
+    }
+
+    joinBtn.addEventListener("click", () => {
+      try { joinRoom(); } catch(e) { alert("Hata: " + e.message); }
+    });
+    sendBtn.addEventListener("click", sendMessage);
+    leaveBtn.addEventListener("click", leaveRoom);
+
+    messageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+
+    roomInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") joinRoom();
+    });
+
+    nameInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") joinRoom();
+    });
+
+    window.addEventListener("load", () => {
+      const savedRoom = localStorage.getItem("mukocan_room");
+      const savedName = localStorage.getItem("mukocan_name");
+
+      if (savedRoom) roomInput.value = savedRoom;
+      if (savedName) nameInput.value = savedName;
+    });
+  </script>
+</body>
+</html>
