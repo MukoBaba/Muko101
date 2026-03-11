@@ -466,7 +466,7 @@ body.team-mode .team-tag { display: block; }
 /* ── Takım skoru ── */
 .team-score-section {
   display: none;
-  margin: 0 12px 12px;
+  margin: 0 12px 6px;
   border-radius: 14px;
   overflow: hidden;
   border: 1px solid #3d2070;
@@ -1098,8 +1098,8 @@ body.team-mode .team-score-section { display: flex; }
 </div>
 
 <!-- Add round -->
-<div class="add-wrap" id="add-wrap" style="display:none;gap:8px;padding:10px 16px 0;">
-  <div style="display:flex;gap:8px;width:100%;">
+<div class="add-wrap" id="add-wrap" style="display:none;gap:6px;padding:8px 16px 0;">
+  <div style="display:flex;gap:6px;width:100%;">
     <button class="add-btn" id="add-btn" style="
       flex:0 0 26%;border-radius:14px;
       padding:12px 6px;font-size:12px;
@@ -1122,7 +1122,7 @@ body.team-mode .team-score-section { display: flex; }
 </div>
 
 <!-- Kilit + Takım butonları — takım skoru üstü -->
-<div id="alt-buttons-wrap" style="display:none;gap:8px;padding:10px 16px 0;">
+<div id="alt-buttons-wrap" style="display:none;gap:6px;padding:6px 16px 0;">
   <button id="alt-lock-btn2" onclick="toggleLock()" style="
     flex:1;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.2);
     border-radius:14px;color:#fff;font-family:inherit;font-size:14px;font-weight:700;
@@ -1136,7 +1136,7 @@ body.team-mode .team-score-section { display: flex; }
 </div>
 
 <!-- Takım skorları -->
-<div class="team-score-section">
+<div class="team-score-section" style="margin-top:6px;">
   <div class="team-score-box red">
     <div class="team-score-title">🔴 Takım 1</div>
     <div class="team-score-names" id="team-names-red"></div>
