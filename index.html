@@ -648,7 +648,7 @@ body.team-mode .team-score-section { display: flex; }
 }
 .share-btn:active { background: rgba(0,229,255,0.2); }
 .reset-btn {
-  width: 100%; padding: 14px;
+  width: 100%; padding: 12px;
   background: rgba(233,69,96,0.1);
   border: 1.5px solid rgba(233,69,96,0.3);
   border-radius: 12px; color: #e94560;
@@ -1100,24 +1100,24 @@ body.team-mode .team-score-section { display: flex; }
 <!-- Add round -->
 <div class="add-wrap" id="add-wrap" style="display:none;gap:8px;padding:10px 16px 0;">
   <div style="display:flex;gap:8px;width:100%;">
+    <button class="add-btn" id="add-btn" style="
+      flex:0 0 26%;border-radius:14px;
+      padding:12px 6px;font-size:12px;
+    ">＋ Tur Ekle</button>
     <button id="durdur-btn" onclick="oyunuDurdur()" style="
-      flex:1;background:rgba(0,80,180,0.18);
+      flex:0 0 26%;background:rgba(0,80,180,0.18);
       border:1.5px solid rgba(60,120,255,0.45);
       border-radius:14px;color:#60aaff;
-      font-family:inherit;font-size:13px;font-weight:700;
-      padding:9px 8px;cursor:pointer;transition:all 0.2s;
+      font-family:inherit;font-size:12px;font-weight:700;
+      padding:12px 6px;cursor:pointer;transition:all 0.2s;
     ">Durdur</button>
-    <button class="add-btn" id="add-btn" style="
-      flex:1;border-radius:14px;
-      padding:9px 8px;font-size:13px;
-    ">＋ Tur Ekle</button>
     <button id="bitis-btn" onclick="oyunuBitir()" style="
       flex:1;background:rgba(255,63,91,0.12);
       border:1.5px solid rgba(255,63,91,0.4);
       border-radius:14px;color:#ff6b8a;
-      font-family:inherit;font-size:13px;font-weight:700;
-      padding:9px 8px;cursor:pointer;transition:all 0.2s;
-    ">Oyunu Bitir</button>
+      font-family:inherit;font-size:12px;font-weight:700;
+      padding:12px 8px;cursor:pointer;transition:all 0.2s;
+    ">🏁 Oyunu Bitir</button>
   </div>
 </div>
 
@@ -1125,13 +1125,13 @@ body.team-mode .team-score-section { display: flex; }
 <div id="alt-buttons-wrap" style="display:none;gap:8px;padding:10px 16px 0;">
   <button id="alt-lock-btn2" onclick="toggleLock()" style="
     flex:1;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.2);
-    border-radius:14px;color:#fff;font-family:inherit;font-size:15px;font-weight:700;
-    padding:14px 8px;cursor:pointer;transition:all 0.2s;
+    border-radius:14px;color:#fff;font-family:inherit;font-size:14px;font-weight:700;
+    padding:12px 8px;cursor:pointer;transition:all 0.2s;
   ">🔒 Kilit</button>
   <button id="alt-team-btn2" onclick="toggleTeam()" style="
     flex:1;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.2);
-    border-radius:14px;color:#fff;font-family:inherit;font-size:15px;font-weight:700;
-    padding:14px 8px;cursor:pointer;transition:all 0.2s;
+    border-radius:14px;color:#fff;font-family:inherit;font-size:14px;font-weight:700;
+    padding:12px 8px;cursor:pointer;transition:all 0.2s;
   ">👤 Takımsız</button>
 </div>
 
@@ -1155,16 +1155,7 @@ body.team-mode .team-score-section { display: flex; }
 <canvas id="pie-chart" width="120" height="120" style="display:none;"></canvas>
 
 
-<!-- Oyun Grafiği -->
-<div class="chart-section" id="chart-section" style="display:none;">
-  <div class="chart-header" id="chart-toggle-btn">
-    <span>📊 <span class="title">Oyun Grafiği</span></span>
-    <span class="chart-toggle" id="chart-toggle-icon">▼</span>
-  </div>
-  <div class="chart-body" id="chart-body">
-    <canvas id="game-chart"></canvas>
-  </div>
-</div>
+<!-- Oyun Grafiği kaldırıldı -->
 
 <!-- Zar Modalı -->
 <div class="tool-modal" id="dice-modal">
@@ -1235,7 +1226,7 @@ body.team-mode .team-score-section { display: flex; }
 <!-- Kılavuz Butonu -->
 <div style="padding: 0 16px 10px;">
   <button id="guide-btn" style="
-    width:100%; padding:14px;
+    width:100%; padding:12px;
     background: rgba(255,215,0,0.08);
     border: 1.5px solid rgba(255,215,0,0.3);
     border-radius: 12px; color: #ffd700;
@@ -1363,6 +1354,7 @@ var NAMES    = ['Oyuncu 1','Oyuncu 2','Oyuncu 3','Oyuncu 4'];
 var MEDALS   = ['🥇','🥈','🥉','4.'];
 var isLocked = true;
 var isTeam   = false;
+var gameStartTime = null;
 document.body.classList.add('locked');
 
 /* ── Ses Efektleri ── */
@@ -1424,6 +1416,17 @@ function getRoundTime(ri) {
   if (total < 1) return '';
   var m = Math.floor(total / 60), s = total % 60;
   return m > 0 ? m + 'd ' + s + 's' : s + 's';
+}
+function getGameElapsed() {
+  if (!gameStartTime) return '';
+  var totalSec = Math.floor((Date.now() - gameStartTime) / 1000);
+  if (totalSec < 1) return '';
+  var h = Math.floor(totalSec / 3600);
+  var m = Math.floor((totalSec % 3600) / 60);
+  var s = totalSec % 60;
+  if (h > 0) return h + ' saat ' + m + ' dk';
+  if (m > 0) return m + ' dk ' + s + ' sn';
+  return s + ' sn';
 }
 function updateRoundTimerDisplay(ri) {
   var el = document.getElementById('rtimer-' + ri);
@@ -1820,6 +1823,8 @@ function renderSaves() {
       if (s.timerElapsed > 0) {
         roundTimers[0] = { start: Date.now(), elapsed: s.timerElapsed };
       }
+      // Oyun başlangıç zamanını geri yükle
+      gameStartTime = s.gameStartTime ? s.gameStartTime : (Date.now() - (s.timerElapsed || 0) * 1000);
       if (isTeam) { document.body.classList.add('team-mode'); }
       else { document.body.classList.remove('team-mode'); }
       oyunBasladi = true;
@@ -1860,7 +1865,7 @@ function renderSaves() {
   var saves = getSaves();
   var now = new Date();
   var date = now.toLocaleDateString('tr-TR') + ' ' + now.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
-  saves.push({ label: label, date: date, names: state.names.slice(), scores: state.scores.map(function(r){ return r.slice(); }), isTeam: isTeam, timerElapsed: roundTimers[0] ? (roundTimers[0].elapsed + (roundTimers[0].start ? Math.floor((Date.now()-roundTimers[0].start)/1000) : 0)) : 0 });
+  saves.push({ label: label, date: date, names: state.names.slice(), scores: state.scores.map(function(r){ return r.slice(); }), isTeam: isTeam, gameStartTime: gameStartTime, timerElapsed: roundTimers[0] ? (roundTimers[0].elapsed + (roundTimers[0].start ? Math.floor((Date.now()-roundTimers[0].start)/1000) : 0)) : 0 });
   setSaves(saves);
   document.getElementById('save-name-inp').value = '';
   renderSaves();
@@ -2110,7 +2115,7 @@ function oyunuBaslat() {
     }
   });
   oyunBasladi = true;
-  // Overlay'deki takım seçimini uygula
+  if (!gameStartTime) gameStartTime = Date.now();
   if (window._ovTakimli) {
     document.getElementById('team-btn') && document.getElementById('team-btn').click();
   }
@@ -2235,6 +2240,7 @@ var chartOpen = false;
 
 function renderChart() {
   var section = document.getElementById('chart-section');
+  if (!section) return;
   var hasAny  = state.scores.some(function(r){ return r.some(function(v){ return v !== ''; }); });
   if (!hasAny) { section.style.display = 'none'; return; }
   section.style.display = 'block';
@@ -2871,7 +2877,7 @@ if (document.readyState === 'loading') {
       var t1 = totals[0] + totals[1];
       var t2 = totals[2] + totals[3];
       var t1Wins = t1 <= t2;
-      var WW = 640, HH = 680;
+      var WW = 640, HH = 720;
       var cv = document.createElement('canvas');
       cv.width = WW; cv.height = HH;
       var c = cv.getContext('2d');
@@ -2943,7 +2949,14 @@ if (document.readyState === 'loading') {
 
       // Tarih
       var dateStr2=state.scores.length+' tur  -  '+new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});
-      c.fillStyle='#ffd700';c.font='bold italic 38px Arial,sans-serif';c.fillText(dateStr2,WW/2,sloY2+96);
+      c.fillStyle='#ffd700';c.font='bold italic 34px Arial,sans-serif';c.fillText(dateStr2,WW/2,sloY2+96);
+
+      // Oyun süresi
+      var elapsed2 = getGameElapsed();
+      if (elapsed2) {
+        c.fillStyle='#c084fc';c.font='bold 20px Arial,sans-serif';
+        c.fillText('⏱ Oyun süresi: '+elapsed2,WW/2,sloY2+132);
+      }
 
       // Logo + alt çizgi
       c.fillStyle='rgba(100,70,180,0.55)';c.font='12px Arial,sans-serif';c.fillText('MukoSanŞeker',WW/2,HH-14);
@@ -3106,8 +3119,16 @@ if (document.readyState === 'loading') {
     // Tarih — büyük, altın, italik
     var dateStr = state.scores.length + ' tur  -  ' + new Date().toLocaleDateString('tr-TR', {day:'numeric', month:'long', year:'numeric'});
     c.fillStyle = '#ffd700';
-    c.font = 'bold italic 42px Arial, sans-serif';
-    c.fillText(dateStr, W/2, sloY + 108);
+    c.font = 'bold italic 38px Arial, sans-serif';
+    c.fillText(dateStr, W/2, sloY + 100);
+
+    // Oyun süresi
+    var elapsed = getGameElapsed();
+    if (elapsed) {
+      c.fillStyle = '#c084fc';
+      c.font = 'bold 22px Arial, sans-serif';
+      c.fillText('⏱ Oyun süresi: ' + elapsed, W/2, sloY + 136);
+    }
 
     // Alt logo
     c.fillStyle = 'rgba(100,70,180,0.55)';
